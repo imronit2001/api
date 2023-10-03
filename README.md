@@ -5,3 +5,4 @@
 
 ## Table of Contents
 - ### #1 Introduction to API (https://youtu.be/9m-YRfCjo0g)
+- ### #2 Inserting data via API using LARAVEL (https://youtu.be/JmI1Wi8X0gs)
