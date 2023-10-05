@@ -27,3 +27,18 @@ Route::get("/student/fetch/ascending",[StudentController::class,"fetchStudentsIn
 
 /** Route to Fetch All Student Age */
 Route::get("/student/fetch/age",[StudentController::class,"fetchStudentsAge"]);
+
+/** Route to update name of a student by id */
+Route::get("/student/update/name",[StudentController::class,"updateStudentName"]);
+
+/** Route to update student details */
+Route::get("/student/update/details",[StudentController::class,"updateStudentDetails"]);
+
+/** Route to update city of multiple student */
+Route::post("/student/update/city",[StudentController::class,"updateStudentCity"]);
+
+/** Route to update city of multiple student by sending id in array */
+Route::post("/student/update/city/array",[StudentController::class,"updateStudentCityByIdArray"]);
+
+/** Route to update city of different student */
+Route::post("/student/update/city/different",[StudentController::class,"updateStudentCityDifferent"]);
