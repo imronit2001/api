@@ -7,3 +7,5 @@
 - ### #1 Introduction to API (https://youtu.be/9m-YRfCjo0g)
 - ### #2 Inserting data via API using LARAVEL (https://youtu.be/JmI1Wi8X0gs)
 - ### #3 Fetching/Retrieving data via API using LARAVEL (https://youtu.be/tVeUJWGwuMk)
+- ### #4 Updating data via API using LARAVEL (https://youtu.be/0MZQPCj1mP4)
+- ### #5 Deleting data via API using LARAVEL (https://youtu.be/RrteTgpWGIA)
