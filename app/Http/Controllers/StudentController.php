@@ -62,7 +62,7 @@ class StudentController extends Controller
     public function fetchStudents()
     {
         try {
-            $student = Student::get();
+            $student = Student::where("is_deleted", false)->get();
 
             return response()->json([
                 "status" => "success",
@@ -472,7 +472,7 @@ class StudentController extends Controller
                 "param" => "required"
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json([
                     "status" => "failure",
                     "status_code" => 400,
@@ -483,12 +483,12 @@ class StudentController extends Controller
 
             $data = [];
 
-            foreach($request->param as $x){
+            foreach ($request->param as $x) {
                 $city = $x['city'];
                 $id = $x['id'];
 
-                $student = Student::where([["id",$id]])->first();
-                if($student){
+                $student = Student::where([["id", $id]])->first();
+                if ($student) {
                     $student->city = $city;
                     $student->save();
                     $data[] = $student;
@@ -501,10 +501,149 @@ class StudentController extends Controller
                 "message" => "Student City Updated Successfully",
                 "data" => $data
             ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => "failure",
+                "status_code" => 500,
+                "message" => "Internal Server Error",
+                "errors" => $e->getMessage()
+            ]);
+        }
+    }
 
+    /** Function to deleteStudentById */
+    public function deleteStudentById(Request $request)
+    {
+        try {
 
+            $validator = Validator::make($request->all(), [
+                "id" => "required"
+            ]);
 
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 400,
+                    "message" => "Validation Error",
+                    "errors" => $validator->errors()
+                ]);
+            }
 
+            $student = Student::where([["id", $request->id]])->first();
+
+            if (!$student) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 404,
+                    "message" => "Student Not Found",
+                    "data" => []
+                ]);
+            }
+
+            $student->delete();
+
+            return response()->json([
+                "status" => "success",
+                "status_code" => 200,
+                "message" => "Student Deleted Successfully",
+                "data" => $student
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => "failure",
+                "status_code" => 500,
+                "message" => "Internal Server Error",
+                "errors" => $e->getMessage()
+            ]);
+        }
+    }
+
+    /** Function to markIsDeletedTrue */
+    public function markIsDeletedTrue(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+                "id" => "required"
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 400,
+                    "message" => "Validation Error",
+                    "errors" => $validator->errors()
+                ]);
+            }
+
+            $student = Student::where([["id", $request->id]])->first();
+
+            if (!$student) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 404,
+                    "message" => "Student Not Found",
+                    "data" => []
+                ]);
+            }
+
+            $student->is_deleted = true;
+            $student->save();
+
+            return response()->json([
+                "status" => "success",
+                "status_code" => 200,
+                "message" => "Student Deleted Successfully",
+                "data" => $student
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => "failure",
+                "status_code" => 500,
+                "message" => "Internal Server Error",
+                "errors" => $e->getMessage()
+            ]);
+        }
+    }
+
+    /** Function to markIsDeletedFalse */
+    public function markIsDeletedFalse(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+                "id" => "required"
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 400,
+                    "message" => "Validation Error",
+                    "errors" => $validator->errors()
+                ]);
+            }
+
+            $student = Student::where([["id", $request->id]])->first();
+
+            if (!$student) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 404,
+                    "message" => "Student Not Found",
+                    "data" => []
+                ]);
+            }
+
+            $student->is_deleted = false;
+            $student->save();
+
+            return response()->json([
+                "status" => "success",
+                "status_code" => 200,
+                "message" => "Student Retrieved Successfully",
+                "data" => $student
+            ]);
         } catch (Exception $e) {
             return response()->json([
                 "status" => "failure",
