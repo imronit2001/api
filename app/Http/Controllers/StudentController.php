@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Certificate;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -650,6 +651,127 @@ class StudentController extends Controller
                 "status_code" => 500,
                 "message" => "Internal Server Error",
                 "errors" => $e->getMessage()
+            ]);
+        }
+    }
+
+    /** Function to uploadProfileImage */
+    public function uploadProfileImage(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+                "id" => "required",
+                "profile_image" => "required|image|max:2048"
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 400,
+                    "message" => "Validation Error",
+                    "errors" => $validator->errors()
+                ]);
+            }
+
+            $student = Student::where([["id", $request->id]])->first();
+
+            if (!$student) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 404,
+                    "message" => "Student Not Found",
+                    "data" => []
+                ]);
+            }
+
+            $myFile = $request->file('profile_image');
+            $filename = $student->stream . "_" . $student->year . "_" . $student->roll_no . "." . $myFile->getClientOriginalExtension();
+            $destination = "profile-images/";
+            $myFile->move($destination, $filename);
+
+            $student->profile_image = $destination . $filename;
+            $student->save();
+
+
+            return response()->json([
+                "status" => "success",
+                "status_code" => 200,
+                "message" => "Profile Image Uploaded Successfully",
+                "data" => $student
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => "failure",
+                "status_code" => 500,
+                "message" => "Internal Server Error",
+                "errors" => $e->getMessage()
+            ]);
+        }
+    }
+
+    /** Function to uploadStudentCertificates */
+    public function uploadStudentCertificates(Request $request)
+    {
+
+        try {
+
+            $validator = Validator::make($request->all(), [
+                "id" => "required",
+                "certificates" => "required",
+                "certificates.*" => "required|mimes:pdf|max:2048"
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 400,
+                    "message" => "Validation Error",
+                    "errors" => $validator->errors()
+                ]);
+            }
+
+            $student = Student::where([["id", $request->id]])->first();
+
+            if (!$student) {
+                return response()->json([
+                    "status" => "failure",
+                    "status_code" => 404,
+                    "message" => "Student Not Found",
+                    "data" => []
+                ]);
+            }
+
+            $arr = [];
+
+            if ($request->file("certificates")) {
+                foreach ($request->file("certificates") as $myFile) {
+                    $filename = $myFile->hashName();
+                    $destination = "certificates/";
+                    $myFile->move($destination, $filename);
+                    
+                    $certificate = new Certificate();
+                    $certificate->student_id = $request->id;
+                    $certificate->certificate_path = $destination . $filename;
+                    $certificate->save();
+
+                    $arr[] = $certificate;
+                }
+            }
+
+            return response()->json([
+                "status" => "success",
+                "status_code" => 200,
+                "message" => "Student Certificate Uploaded Successfully",
+                "data" => $arr
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => "failure",
+                "status_code" => 500,
+                "message" => "Internal Server Error",
+                "error" => $e->getMessage()
             ]);
         }
     }

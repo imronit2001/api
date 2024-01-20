@@ -9,3 +9,4 @@
 - ### #3 Fetching/Retrieving data via API using LARAVEL (https://youtu.be/tVeUJWGwuMk)
 - ### #4 Updating data via API using LARAVEL (https://youtu.be/0MZQPCj1mP4)
 - ### #5 Deleting data via API using LARAVEL (https://youtu.be/RrteTgpWGIA)
+- ### #6 File Upload via API using LARAVEL || Multiple Files Upload (https://youtu.be/QoUNt_86UGg)

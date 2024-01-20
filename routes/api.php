@@ -51,3 +51,9 @@ Route::delete("/student/delete", [StudentController::class, "markIsDeletedTrue"]
 
 /** Route to mark student as is deleted false */
 Route::put("/student/delete", [StudentController::class, "markIsDeletedFalse"]);
+
+/** Route to upload profile image */
+Route::post("/student/upload/profile-image", [StudentController::class, "uploadProfileImage"]);
+
+/** Route to upload multiple files */
+Route::post("/student/upload/certificates",[StudentController::class,"uploadStudentCertificates"]);
